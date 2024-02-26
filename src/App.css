@@ -1,0 +1,11 @@
+div {
+  margin: 10px;
+}
+
+label {
+  margin-right: 5px;
+}
+
+.error {
+  color: brown;
+}
