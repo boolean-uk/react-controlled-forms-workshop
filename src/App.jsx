@@ -70,13 +70,6 @@ function App() {
     console.log("Form submitted... preventing default behaviour");
   };
 
-  const canSubmit = () => {
-    if (formData.email.length === 0) return false;
-    if (formData.name.length === 0) return false;
-    if (formData.password.length === 0) return false;
-    return true;
-  };
-
   // naive form validation that returns the strings to be displayed - annoying to have multiple errors handled at once
   // const validateForm = () => {
   //   const formErrors = {
@@ -103,30 +96,43 @@ function App() {
     const formErrors = {
       nameError: [],
       passwordError: [],
+      hasErrors: false,
     };
 
     // name validations
     if (!validateMinimumLength(formData.name, 3)) {
       formErrors.nameError.push("Name must be at least 3 characters long.");
+      formErrors.hasErrors = true;
     }
     // password validations
     if (!validateMinimumLength(formData.password, 3)) {
       formErrors.passwordError.push(
         "Password must be at least 8 characters long."
       );
+      formErrors.hasErrors = true;
     }
+    // TODO: comment this out if you want to be able to submit the form
+    // OR change validateContainsLetter to return true
     if (!validateContainsLetter(formData.password)) {
       formErrors.passwordError.push("Password must contain at least 1 letter");
+      formErrors.hasErrors = true;
     }
 
     return formErrors;
   };
 
   const formErrors = validateForm();
-
-  console.log("App()", formData, canSubmit());
-
-  console.log("name changed?", formDataChanged);
+  // naive can submit, this is to be replaced by a call of validateForm that returns if the form
+  // has any errors
+  // const canSubmit = () => {
+  //   if (formData.email.length === 0) return false;
+  //   if (formData.name.length === 0) return false;
+  //   if (formData.password.length === 0) return false;
+  //   return true;
+  // };
+  // can submit only if we don't have form errors
+  const canSubmit = formErrors.hasErrors === false;
+  console.log("App()", formData, formErrors);
 
   return (
     <>
@@ -230,7 +236,7 @@ function App() {
           </select>
         </div>
 
-        <input type="submit" disabled={canSubmit() === false} />
+        <input type="submit" disabled={canSubmit === false} />
       </form>
     </>
   );
